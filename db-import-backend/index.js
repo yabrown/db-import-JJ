@@ -20,27 +20,39 @@ app.use(cors({ origin: '*', "methods": "GET,HEAD,PUT,PATCH,POST,DELETE" }));
 
 
 app.post("/", async(req, res) => {
+  console.log("HTTP request received")
+
   try{  
-    console.log("HTTP request received")
 
     console.log('Payload: ', req.body);
-    const url = new URL(req.body.link);
-    const DBName = req.body.DBName;
+    const {link, DBName, force} = req.body
     if (!DBName) throw new Error('table name cannot be blank');
+    if (!(new URL(link))) throw new Error('link invalid');
    
-    // fetch data
-    const data = await fetch(url);
-    const jsonData = await data.json();
-    console.log("--fetched data--")
-   
-    //add to database
-    const sequelize = await database.connect()
-    await database.addTable(sequelize, jsonData, DBName)
+    //connect to database
+    let sequelize = await database.connect()
+    sequelize.authenticate();
+
+    //if force=false, then check last_updated times
+    if (!force){
+      const needsUpdate = await database.needsUpdate(sequelize, link);
+      console.log("Needs update: ", needsUpdate)
+      if (!needsUpdate){
+        await database.disconnect(sequelize);
+        res.status(302).send({message: "already up-to-date"});
+        return;
+      }
+    }
+
+    // if force=true or needs to be updated...
+    await database.importTable(sequelize, link, DBName)
+
+    //disconnect and send response
     await database.disconnect(sequelize);
     console.log("HTTP request completed successfully")
     res.status(200).send({message: "successfully loaded table and data into database"})
   }catch(error){
-    console.log("HTTP request could not be completed, returning error: ", error.message)
+    console.log("HTTP request could not be completed, returning error: ", {error})
     res.status(500).send({message: 'Error: '+error.message})
   }
 });

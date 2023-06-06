@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React, {useState} from 'react';
-import {LinkPullForm} from './Components'
+import {ImportForm} from './Components/ImportForm'
 import {createTable, basicGet} from './backend'
 
 
@@ -14,7 +14,7 @@ function App() {
         {count}
         <button onClick={()=>setCount(count+1)}>Update counter</button>
         <br/><br/><br/>
-        <LinkPullForm/>
+        <ImportForm/>
       </header>
     </div>
   );
