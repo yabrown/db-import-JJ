@@ -14,13 +14,13 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^4.0.3",
-    "sequelize": "^6.31.1",
+    "sequelize": "^6.32.0",
     "tedious": "^16.1.0",
     "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "node -v && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -40,5 +40,8 @@
     "@babel/core": "^7.12.9",
     "@babel/preset-typescript": "^7.18.6",
     "path-browserify": "^1.0.1"
+  },
+  "engines": {
+    "node": "=16.18.0"
   }
 }

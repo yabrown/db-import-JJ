@@ -1,7 +1,7 @@
 
 import { Sequelize, Model, DataTypes } from 'sequelize';
 
-const PORT = 'http://localhost:3000'
+const PORT = 'https://jj-table-importer.onrender.com/'
 const SOCKETPORT = 'ws://localhost:3000'
 
 
