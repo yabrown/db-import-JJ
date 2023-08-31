@@ -10,17 +10,13 @@ const assert = require("assert")
 async function connect(){
     try{ 
       const sequelize = await new Sequelize({
-        dialect: 'mssql',
-        dialectModule: tedious, // Use the tedious module for MSSQL dialect
-        host: '174.143.110.218',
-        port: '1433',
-        database: 'TempTables',
-        username: 'abraun',
-        password: 'j43H^zcf$4d1AS8&',
-        logging: false,
-        dialectOptions: {
-          options: { "requestTimeout": 300000 }
-        }
+        dialect: 'mysql',
+        //dialectModule: tedious, // Use the tedious module for MSSQL dialect
+        host: 'localhost',
+        database: 'Ari',
+        username: 'root',
+        password: 'password',
+        logging: false
       });
       await sequelize.authenticate();
       console.log("--CONNECTED TO DATABASE--");
@@ -88,6 +84,7 @@ async function needsUpdate(sequelize, link){
   }
     
   const UpdateLogs = await importUpdateLogs(sequelize)
+  await UpdateLogs.sync();
   //remote update time
   const row = await UpdateLogs.findOne({
     where: {
@@ -109,6 +106,7 @@ async function setUpdateTime(sequelize, code, time) {
   var timestamp = timeAsDate.toISOString().replace('T', ' ').replace('Z', '').substring(0,19);
   try {
     const UpdateLogs = await importUpdateLogs(sequelize);
+    UpdateLogs.sync();
     // Check if the name already exists
     const existingInstance = await UpdateLogs.findOne({ where: { code: code } });
 
